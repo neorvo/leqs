@@ -15,18 +15,20 @@ Print["C0 acetato de etilo = ", UnitConvert[c0, "Moles"/"Liters"]];
 raw = Import[FileNameJoin[{thisDir, "..", "dados_exemplo", "ensaio_A_exemplo.csv"}], "Dataset"];
 
 dados = Normal@raw[All,
-  <|
-    "t" -> Quantity[#t_min, "Minutes"],
-    "V_aliquota" -> Quantity[#V_aliquota_mL, "Milliliters"],
-    "C_NaOH" -> Quantity[#C_NaOH_mol_L, "Moles"/"Liters"],
-    "V_NaOH" -> Quantity[#V_NaOH_mL, "Milliliters"]
-  |>&
+  Function[row,
+    <|
+      "t" -> Quantity[row["t_min"], "Minutes"],
+      "V_aliquota" -> Quantity[row["V_aliquota_mL"], "Milliliters"],
+      "C_NaOH" -> Quantity[row["C_NaOH_mol_L"], "Moles"/"Liters"],
+      "V_NaOH" -> Quantity[row["V_NaOH_mL"], "Milliliters"]
+    |>
+  ]
 ];
 
 tab = TabelaConversao[dados, c0];
 Print[Dataset[tab][All, {"t", "C_acido", "X"}]];
 
-aj = AjusteKObs[tab[[All, "t"]], tab[[All, "X"]]];
+aj = AjusteKObs[Lookup[tab, "t"], Lookup[tab, "X"]];
 Print["k_obs = ", aj["k_obs"], "   R2 = ", aj["R2"]];
 
 prop = CaudalLeitoFixo[aj["k_obs"], Quantity[10, "Grams"], 0.20];
