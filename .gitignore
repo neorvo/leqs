@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.nb.bak
+*.nb.backup
+*.wl~
+*.wls~
+.vscode/
+.cursor/
+*.mx
+*.wdx
+dados_turma/
+notas/
+local/
+*.docx
+~$ *
+~$*
